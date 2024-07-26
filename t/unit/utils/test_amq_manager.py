@@ -9,23 +9,23 @@ from kombu import Connection
 
 class test_get_manager:
 
-    @pytest.mark.masked_modules('pyrabbit')
+    @pytest.mark.masked_modules('pyrabbit2')
     def test_without_pyrabbit(self, mask_modules):
         with pytest.raises(ImportError):
             Connection('amqp://').get_manager()
 
-    @pytest.mark.ensured_modules('pyrabbit')
+    @pytest.mark.ensured_modules('pyrabbit2')
     def test_with_pyrabbit(self, module_exists):
-        with patch('pyrabbit.Client', create=True) as Client:
+        with patch('pyrabbit2.Client', create=True) as Client:
             manager = Connection('amqp://').get_manager()
             assert manager is not None
             Client.assert_called_with(
                 'localhost:15672', 'guest', 'guest',
             )
 
-    @pytest.mark.ensured_modules('pyrabbit')
+    @pytest.mark.ensured_modules('pyrabbit2')
     def test_transport_options(self, module_exists):
-        with patch('pyrabbit.Client', create=True) as Client:
+        with patch('pyrabbit2.Client', create=True) as Client:
             manager = Connection('amqp://', transport_options={
                 'manager_hostname': 'admin.mq.vandelay.com',
                 'manager_port': 808,
